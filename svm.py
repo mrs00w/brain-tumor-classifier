@@ -12,14 +12,13 @@ import joblib
 def save_svm_model(model, filename):
     joblib.dump(model, filename)
     print(f"Modèle SVM sauvegardé sous : {filename}")
-
+ 
 def load_svm_model(filename):
     if os.path.exists(filename):
         model = joblib.load(filename)
         print(f"Modèle SVM chargé depuis : {filename}")
         return model
     return None
-
 
 def train_svm(X_train, y_train, kernel="rbf", C=1.0):
     print(f"-" * 20 + "Entrainement du SVM avec Kernel : {kernel}" + "-" * 20)
@@ -54,7 +53,8 @@ if __name__ == "__main__":
     print(f" SVM Classifier ".center(60))
     print("=" * 60)
 
-    data = load_knn_data("knn_cache.npz")
+    # data = load_knn_data("knn_cache.npz")
+    data = load_knn_data("knn_cache_lbp_dataset_2.npz")
     if data is None:
         X_train, y_train = load_data(data_path, class_names, train_step="Training")
         X_test, y_test = load_data(data_path, class_names, train_step="Testing")

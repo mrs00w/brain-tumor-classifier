@@ -40,6 +40,3 @@ def prepare_cnn_data(data_path):
     
     return train_loader, test_loader
 
-class CNN(nn.Module):
-    def __init__(self):
-        super(CNN, self).__init__()

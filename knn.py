@@ -4,12 +4,13 @@ import os
 import kagglehub
 from math import *
 from tqdm import tqdm
+from skimage.feature import local_binary_pattern
 
-def save_knn_data(X_train, y_train, X_test, y_test, filename="knn_cache_dataset_1.npz"):
+def save_knn_data(X_train, y_train, X_test, y_test, filename="knn_cache_lbp_dataset_2.npz"):
     np.savez_compressed(filename, X_train=X_train, y_train=y_train, X_test=X_test, y_test=y_test)
     print(f"Features KNN sauvegardées dans {filename}")
 
-def load_knn_data(filename="knn_cache_dataset_1.npz"):
+def load_knn_data(filename="knn_cache_lbp_dataset_2.npz"):
     if os.path.exists(filename):
         data = np.load(filename)
         print(f"Features KNN chargées depuis {filename}")
@@ -41,11 +42,23 @@ def load_data(data_dir, classes, train_step):
             img = cv2.imread(img_path, cv2.IMREAD_COLOR)
             
             if img is not None:
-                hist_vector = calculate_histogram(img, m)
+                # hist_vector = calculate_histogram(img, m)
+                hist_vector = calculate_LBP_histogram(img, m)
                 X_features.append(hist_vector)
                 y_labels.append(label_id)
 
     return np.array(X_features), np.array(y_labels)
+
+def calculate_LBP_histogram(img, m=256):
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    radius = 1
+    n = 8 * radius
+    lbp = local_binary_pattern(gray, n, radius, method="uniform")
+    n_bins = int(lbp.max() + 1)
+    hist, _ = np.histogram(lbp.ravel(), bins=n_bins, range=(0, n_bins), density=True)
+    hist = hist.astype("float32")
+    hist /= (hist.sum() + 1e-7)
+    return hist
 
 def calculate_histogram(img, m):
     img = cv2.resize(img, (128, 128)) # Amélioration
@@ -157,11 +170,11 @@ def advanced_metrics(C):
 
 if __name__ == "__main__":
     K = 4
-    class_names = ["notumor", "glioma"] # Dataset 1
-    # class_names = ["no_tumor", "glioma_tumor"] # Dataset 2
+    # class_names = ["notumor", "glioma"] # Dataset 1
+    class_names = ["no_tumor", "glioma_tumor"] # Dataset 2
 
-    data_path = kagglehub.dataset_download("masoudnickparvar/brain-tumor-mri-dataset") # Dataset 1
-    # data_path = kagglehub.dataset_download("sartajbhuvaji/brain-tumor-classification-mri") # Dataset 2
+    # data_path = kagglehub.dataset_download("masoudnickparvar/brain-tumor-mri-dataset") # Dataset 1
+    data_path = kagglehub.dataset_download("sartajbhuvaji/brain-tumor-classification-mri") # Dataset 2
     print("Path to dataset files:", data_path)
 
     print("\n" + "-"*60)
