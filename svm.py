@@ -54,7 +54,7 @@ if __name__ == "__main__":
     print("=" * 60)
 
     # data = load_knn_data("knn_cache.npz")
-    data = load_knn_data("knn_cache_lbp_dataset_2.npz")
+    data = load_knn_data("knn_cache_dataset_2.npz")
     if data is None:
         X_train, y_train = load_data(data_path, class_names, train_step="Training")
         X_test, y_test = load_data(data_path, class_names, train_step="Testing")
@@ -72,15 +72,15 @@ if __name__ == "__main__":
     total_samples = np.sum(C)
 
     print("="*60)
-    print("  RÉSUMÉ DES RÉSULTATS  ".center(60))
+    print("  RESULTS SUMMARY ".center(60))
     print("="*60)
     print(f"| Accuracy : {accuracy:.4f} ({accuracy*100:.2f} %)".ljust(59) + "|")
     print(f"| Recall : {recall:.4f} ({recall*100:.2f} %)".ljust(59) + "|")
     print(f"| Precision : {precision:.4f} ({precision*100:.2f} %)".ljust(59) + "|")
     print(f"| F1-Score : {f1_score:.4f} ({f1_score*100:.2f} %)".ljust(59) + "|")
-    print(f"| Prédictions Correctes : {correct_samples}/{total_samples}".ljust(59) + "|")
+    print(f"| Correct Predictions : {correct_samples}/{total_samples}".ljust(59) + "|")
     print("="*60)
-    print(f"-------------------------- FIN ---------------------------")
+    print(f"-------------------------- END ---------------------------")
 
 
 

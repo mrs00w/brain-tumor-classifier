@@ -6,11 +6,11 @@ from math import *
 from tqdm import tqdm
 from skimage.feature import local_binary_pattern
 
-def save_knn_data(X_train, y_train, X_test, y_test, filename="knn_cache_lbp_dataset_2.npz"):
+def save_knn_data(X_train, y_train, X_test, y_test, filename="knn_cache_dataset_2.npz"):
     np.savez_compressed(filename, X_train=X_train, y_train=y_train, X_test=X_test, y_test=y_test)
     print(f"Features KNN sauvegardées dans {filename}")
 
-def load_knn_data(filename="knn_cache_lbp_dataset_2.npz"):
+def load_knn_data(filename="knn_cache_dataset_2.npz"):
     if os.path.exists(filename):
         data = np.load(filename)
         print(f"Features KNN chargées depuis {filename}")
@@ -42,8 +42,8 @@ def load_data(data_dir, classes, train_step):
             img = cv2.imread(img_path, cv2.IMREAD_COLOR)
             
             if img is not None:
-                # hist_vector = calculate_histogram(img, m)
-                hist_vector = calculate_LBP_histogram(img, m)
+                hist_vector = calculate_histogram(img, m)
+                # hist_vector = calculate_LBP_histogram(img, m)
                 X_features.append(hist_vector)
                 y_labels.append(label_id)
 
@@ -169,7 +169,7 @@ def advanced_metrics(C):
     return recall, precision, f1_score
 
 if __name__ == "__main__":
-    K = 4
+    K = 3
     # class_names = ["notumor", "glioma"] # Dataset 1
     class_names = ["no_tumor", "glioma_tumor"] # Dataset 2
 
@@ -181,26 +181,26 @@ if __name__ == "__main__":
     print(f" KNN Classifier (k = {K}) ".center(60))
     print("=" * 60)
 
-    print(f"| Paramètre K : {K}".ljust(59) + "|")
+    print(f"| Parameter K : {K}".ljust(59) + "|")
     print(f"| {len(class_names)} Classes : {', '.join(class_names)}".ljust(59) + "|")
     print("=" * 60)
 
-    accuracy, C = evaluate_knn(data_path, class_names, 4)
+    accuracy, C = evaluate_knn(data_path, class_names, K)
     recall, precision, f1_score = advanced_metrics(C)
     correct_samples = np.trace(C)
     total_samples = np.sum(C)
 
     print("="*60)
-    print("  RÉSUMÉ DES RÉSULTATS  ".center(60))
+    print("  RESULTS SUMMARY  ".center(60))
     print("="*60)
     print(f"| Accuracy : {accuracy:.4f} ({accuracy*100:.2f} %)".ljust(59) + "|")
     print(f"| Recall : {recall:.4f} ({recall*100:.2f} %)".ljust(59) + "|")
     print(f"| Precision : {precision:.4f} ({precision*100:.2f} %)".ljust(59) + "|")
     print(f"| F1-Score : {f1_score:.4f} ({f1_score*100:.2f} %)".ljust(59) + "|")
-    print(f"| Prédictions Correctes : {correct_samples}/{total_samples}".ljust(59) + "|")
+    print(f"| Correct Predictions : {correct_samples}/{total_samples}".ljust(59) + "|")
     print("="*60)
 
-    print(f"-------------------------- FIN ---------------------------")
+    print(f"-------------------------- END ---------------------------")
 
 
 
